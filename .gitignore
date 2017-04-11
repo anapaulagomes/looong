@@ -1,0 +1,15 @@
+venv/
+**.DS_Store
+.tox
+bin/
+dist/
+build/
+wheelhouse/
+*.egg-info/
+*.py[co]
+__pycache__/
+.tox
+doc/_build/
+.cache
+.coverage
+.python-version
