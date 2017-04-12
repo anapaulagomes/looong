@@ -1,1 +1,0 @@
-- Add code climate as code reviewer tool
