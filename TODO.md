@@ -1,0 +1,4 @@
+- Detect the language by the file extension
+- Rank the parameters by name
+- Group the parameters guided by frequency they appear together
+- Generate HTML report
