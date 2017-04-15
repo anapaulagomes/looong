@@ -1,15 +1,12 @@
+import re
+
+
 class Analyzer(object):
 
     def __init__(self, content):
         self.content = content
 
     def parameters(self):
-        # TODO implement this with regex
-        parenthesis_left_side = self.content.find('(')
-        parenthesis_right_side = self.content.find(')')
-        parameters = self.content[parenthesis_left_side+1:parenthesis_right_side]
-
-        if parameters == '':
-            return []
-        else:
-            return parameters.replace(' ', '').split(',')
+        raw_parameters_list = re.findall(r'(\(.*\))', self.content)
+        parameters_list = [parameters.replace(')', '').replace('(', '') for parameters in raw_parameters_list if parameters != '()']
+        return parameters_list
