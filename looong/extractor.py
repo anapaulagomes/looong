@@ -8,10 +8,13 @@ class Extractor(object):
         self.filename = filename
 
     def methods(self):
-        parameters_list = self._parameters()
-        return [Method('foo', 'foo.py', parameters_list)]
+        method_list = []
 
-    def _parameters(self):
-        raw_parameters_list = re.findall(r'(\(.*\))', self.filename.read())
-        parameters_list = [parameters.replace(')', '').replace('(', '') for parameters in raw_parameters_list if parameters != '()']
-        return parameters_list
+        raw_parameters_list = re.findall(r'def ([a-z]*)\((.*)\)', self.filename.read())
+
+        for name, parameters in raw_parameters_list:
+            parameters_list = parameters.replace(' ', '').split(',')
+            method = Method(name, self.filename, [] if parameters_list[0] == '' else parameters_list)
+            method_list.append(method)
+
+        return method_list
