@@ -14,7 +14,7 @@ def os_mock(mocker):
     yield mocker.patch('os.walk', return_value=[(directory, [], ['foo.py'])])
 
 
-def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(mocker, os_mock):
+def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(os_mock):
     extractor = Extractor('/tests/fixtures')
 
     file_mock = mock.mock_open(read_data='def foo(bar):')
@@ -26,7 +26,7 @@ def test_should_return_method_with_one_parameter_when_extract_from_method_with_o
     assert ['bar'] == methods
 
 
-def test_should_extract_multiple_parameters_on_method_parameter_list(mocker, os_mock):
+def test_should_extract_multiple_parameters_on_method_parameter_list(os_mock):
     extractor = Extractor('/tests/fixtures')
 
     file_mock = mock.mock_open(read_data='def foo(bar, other_bar):')
@@ -38,7 +38,7 @@ def test_should_extract_multiple_parameters_on_method_parameter_list(mocker, os_
     assert ['bar', 'other_bar'] == methods[0].parameters_list
 
 
-def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(mocker, os_mock):
+def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(os_mock):
     extractor = Extractor('/tests/fixtures')
 
     file_mock = mock.mock_open(read_data='def foo():')
