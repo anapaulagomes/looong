@@ -59,7 +59,7 @@ def test_should_return_parameters_list_extracted_from_a_file():
     assert ['**bar']            == code_files[0].method_list[4].parameters_list
 
 
-def test_should_return_code_file_with_methods_list():
+def test_should_return_filename_from_code_file():
     extractor = Extractor('/tests/fixtures')
     code_files = extractor.code_files()
 
