@@ -59,8 +59,9 @@ def test_should_return_parameters_list_extracted_from_a_file():
     assert ['**bar']            == code_files[0].method_list[4].parameters_list
 
 
-def test_should_return_filename_from_code_file():
+def test_should_return_filename_and_directory_from_code_file():
     extractor = Extractor('/tests/fixtures')
     code_files = extractor.code_files()
 
     assert 'my_python_test_file.py' == code_files[0].filename
+    assert os.getcwd() + '/tests/fixtures' == code_files[0].directory
