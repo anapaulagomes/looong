@@ -29,6 +29,7 @@ class Extractor(object):
 
         for name, parameters in raw_parameters_list:
             parameters_list = parameters.replace(' ', '').split(',')
+            parameters_list = [parameter for parameter in parameters_list if parameter != 'self']
             method = Method(name, filename, [] if parameters_list[0] == '' else parameters_list)
             method_list.append(method)
 

@@ -65,3 +65,13 @@ def test_should_return_filename_and_directory_from_code_file():
 
     assert 'my_python_test_file.py' == code_files[0].filename
     assert os.getcwd() + '/tests/fixtures' == code_files[0].directory
+
+
+def test_ignore_self_from_parameter_list(os_mock):
+    extractor = Extractor('/tests/fixtures')
+
+    file_mock = mock.mock_open(read_data='def foo(self, bar):')
+    with mock.patch('builtins.open', file_mock, create=True):
+        code_files = extractor.code_files()
+
+    assert ['bar'] == code_files[0].method_list[0].parameters_list
