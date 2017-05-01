@@ -5,3 +5,6 @@ python:
   - "3.6"
 install: "pip install -r requirements.txt"
 script: make test
+addons:
+    code_climate:
+        repo_token: 5e9e68407145ee982a7b395311c8d24de080ac0d59666023b6d082f8cce14bb6
