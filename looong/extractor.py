@@ -10,7 +10,7 @@ class Extractor(object):
         self.directory = directory
 
     def code_files(self):
-        full_directory = os.getcwd() + self.directory
+        full_directory = self.directory
         code_files_list = []
 
         for dirpath, dirnames, filenames in os.walk(full_directory):
@@ -24,13 +24,21 @@ class Extractor(object):
 
     def __methods(self, filename):
         method_list = []
-        filename = open(filename)
+        filename = open(filename, encoding='ISO-8859-1')# TODO verify the better way to get the encoding
         raw_parameters_list = re.findall(r'def ([a-z]*)\((.*)\)', filename.read())
 
         for name, parameters in raw_parameters_list:
             parameters_list = parameters.replace(' ', '').split(',')
-            parameters_list = [parameter for parameter in parameters_list if parameter != 'self']
-            method = Method(name, filename, [] if parameters_list[0] == '' else parameters_list)
+            parameters_list = self.__ignored_parameters(parameters_list)
+
+            if parameters_list != []:
+                method = Method(name, filename.name, [] if parameters_list[0] == '' else parameters_list)
+            else:
+                method = Method(name, filename.name, [])
             method_list.append(method)
 
         return method_list
+
+    def __ignored_parameters(self, parameters_list):
+        ignored_parameters = ['self', 'cls']
+        return [parameter for parameter in parameters_list if parameter not in ignored_parameters]
