@@ -1,5 +1,4 @@
-- Detect the language by the file extension
-- Rank the parameters by name
+- Receive command as arguments
 - Group the parameters guided by frequency they appear together
+- Detect the language by the file extension
 - Generate HTML report
-- Receive command arguments
