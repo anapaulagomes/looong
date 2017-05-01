@@ -7,6 +7,13 @@ class Analyzer(object):
     def __init__(self, method_list):
         self.method_list = method_list
 
+    def execute(self):
+        ranking = self.long_parameter_list_ranking()
+
+        for method in ranking:
+            number_of_parameters = ('\x1b[6;31;40m{}\x1b[0m').format(len(method.parameters_list))
+            print('{} [{}] {} {}'.format(method.name, method.filename, method.parameters_list, number_of_parameters))
+
     def has_long_parameter_list(self, method):
         return len(method.parameters_list) > self.LONG_PARAMETER_THRESHOULD
 
