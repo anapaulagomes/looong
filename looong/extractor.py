@@ -28,8 +28,7 @@ class Extractor(object):
         raw_parameters_list = self.__identify_method_patterns(filename)
 
         for name, parameters in raw_parameters_list:
-            parameters_list = parameters.replace(' ', '').split(',')
-            parameters_list = self.__ignored_parameters(parameters_list)
+            parameters_list = self.__clean_parameters(parameters)
 
             if parameters_list != []:
                 method = Method(name, filename.name, [] if parameters_list[0] == '' else parameters_list)
@@ -42,6 +41,15 @@ class Extractor(object):
     def __identify_method_patterns(self, filename):
         return re.findall(r'def ([a-z]*)\((.*)\)', filename.read())
 
+    def __clean_parameters(self, raw_parameters_list):
+        parameters_list = raw_parameters_list.replace(' ', '').split(',')
+        parameters_list = self.__ignored_parameters(parameters_list)
+        parameters_list = self.__ignore_default_values(parameters_list)
+        return parameters_list
+
     def __ignored_parameters(self, parameters_list):
         ignored_parameters = ['self', 'cls']
         return [parameter for parameter in parameters_list if parameter not in ignored_parameters]
+
+    def __ignore_default_values(self, parameters_list):
+        return [parameter[:parameter.find('=')] if parameter.find('=') != -1 else parameter for parameter in parameters_list]
