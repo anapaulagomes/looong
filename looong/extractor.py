@@ -25,7 +25,7 @@ class Extractor(object):
     def __methods(self, filename):
         method_list = []
         filename = open(filename, encoding='ISO-8859-1')# TODO verify the better way to get the encoding
-        raw_parameters_list = re.findall(r'def ([a-z]*)\((.*)\)', filename.read())
+        raw_parameters_list = self.__identify_method_patterns(filename)
 
         for name, parameters in raw_parameters_list:
             parameters_list = parameters.replace(' ', '').split(',')
@@ -38,6 +38,9 @@ class Extractor(object):
             method_list.append(method)
 
         return method_list
+
+    def __identify_method_patterns(self, filename):
+        return re.findall(r'def ([a-z]*)\((.*)\)', filename.read())
 
     def __ignored_parameters(self, parameters_list):
         ignored_parameters = ['self', 'cls']
