@@ -23,3 +23,9 @@ Correlated parameters:
 (foo, bar, barbar)
 
 ```
+
+### Development
+
+`pytest tests/`
+
+`pytest --cov=looong tests/`
