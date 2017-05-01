@@ -48,7 +48,6 @@ def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_o
 
 
 def test_should_return_parameters_list_extracted_from_a_file(extractor):
-    extractor = Extractor(os.getcwd() + '/tests/fixtures')
     code_files = extractor.code_files()
 
     assert []                   == code_files[0].method_list[0].parameters_list
@@ -79,3 +78,19 @@ def test_ignore_cls_from_parameter_list(os_mock, extractor):
         code_files = extractor.code_files()
 
     assert ['bar'] == code_files[0].method_list[0].parameters_list
+
+
+def test_ignore_default_values_of_parameters(os_mock, extractor):
+    file_mock = mock.mock_open(read_data='def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):')
+    with mock.patch('builtins.open', file_mock, create=True):
+        code_files = extractor.code_files()
+
+    assert ['request', 'stream', 'timeout', 'verify', 'cert', 'proxies'] == code_files[0].method_list[0].parameters_list
+
+
+def test_return_an_empty_list_when_just_an_ignored_parameter_is_found_on_parameter_list(os_mock, extractor):
+    file_mock = mock.mock_open(read_data='def foo(self):')
+    with mock.patch('builtins.open', file_mock, create=True):
+        code_files = extractor.code_files()
+
+    assert [] == code_files[0].method_list[0].parameters_list
