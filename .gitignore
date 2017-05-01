@@ -13,3 +13,4 @@ doc/_build/
 .cache
 .coverage
 .python-version
+htmlcov/
