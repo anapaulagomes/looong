@@ -1,6 +1,5 @@
 appdirs==1.4.3
 coverage==4.3.4
-looong==0.1.0
 mock==2.0.0
 packaging==16.8
 pbr==3.0.0
