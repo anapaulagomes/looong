@@ -1,5 +1,4 @@
 from looong.method import Method
-from looong.codefile import CodeFile
 import re
 import os
 
@@ -9,18 +8,16 @@ class Extractor(object):
     def __init__(self, directory):
         self.directory = directory
 
-    def code_files(self):
+    def all_methods(self):
         full_directory = self.directory
-        code_files_list = []
+        methods_list = []
 
         for dirpath, dirnames, filenames in os.walk(full_directory):
             for filename in filenames:
                 filename_with_path = dirpath + '/' + filename
-                method_list = self.__methods(filename_with_path)
-                code_file = CodeFile(filename, dirpath, method_list)
-                code_files_list.append(code_file)
+                methods_list = methods_list + self.__methods(filename_with_path)
 
-        return code_files_list
+        return methods_list
 
     def __methods(self, filename):
         method_list = []

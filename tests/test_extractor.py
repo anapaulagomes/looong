@@ -1,6 +1,5 @@
 from looong.extractor import Extractor
 from looong.method import Method
-from looong.codefile import CodeFile
 import os
 import pytest
 import mock
@@ -22,75 +21,72 @@ def extractor():
 def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(bar):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    methods = code_files[0].method_list[0].parameters_list
+    methods = methods_list[0].parameters_list
 
-    assert ['bar'] == methods
+    assert methods == ['bar']
 
 
 def test_should_extract_multiple_parameters_on_method_parameter_list(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(bar, other_bar):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    methods = code_files[0].method_list
-
-    assert ['bar', 'other_bar'] == methods[0].parameters_list
+    assert methods_list[0].parameters_list == ['bar', 'other_bar']
 
 
 def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo():')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    assert [] == code_files[0].method_list[0].parameters_list
+    assert methods_list[0].parameters_list == []
 
 
 def test_should_return_parameters_list_extracted_from_a_file(extractor):
-    code_files = extractor.code_files()
+    methods_list = extractor.all_methods()
 
-    assert []                   == code_files[0].method_list[0].parameters_list
-    assert ['bar']              == code_files[0].method_list[1].parameters_list
-    assert ['bar', 'other_bar'] == code_files[0].method_list[2].parameters_list
-    assert ['*bar']             == code_files[0].method_list[3].parameters_list
-    assert ['**bar']            == code_files[0].method_list[4].parameters_list
+    assert methods_list[0].parameters_list == []
+    assert methods_list[1].parameters_list == ['bar']
+    assert methods_list[2].parameters_list == ['bar', 'other_bar']
+    assert methods_list[3].parameters_list == ['*bar']
+    assert methods_list[4].parameters_list == ['**bar']
 
 
 def test_should_return_filename_and_directory_from_code_file(extractor):
-    code_files = extractor.code_files()
+    methods_list = extractor.all_methods()
 
-    assert 'my_python_test_file.py' == code_files[0].filename
-    assert os.getcwd() + '/tests/fixtures' == code_files[0].directory
+    assert methods_list[0].filename == os.getcwd() + '/tests/fixtures/my_python_test_file.py'
 
 
 def test_ignore_self_from_parameter_list(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(self, bar):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    assert ['bar'] == code_files[0].method_list[0].parameters_list
+    assert methods_list[0].parameters_list == ['bar']
 
 
 def test_ignore_cls_from_parameter_list(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(cls, bar):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    assert ['bar'] == code_files[0].method_list[0].parameters_list
+    assert methods_list[0].parameters_list == ['bar']
 
 
 def test_ignore_default_values_of_parameters(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    assert ['request', 'stream', 'timeout', 'verify', 'cert', 'proxies'] == code_files[0].method_list[0].parameters_list
+    assert methods_list[0].parameters_list == ['request', 'stream', 'timeout', 'verify', 'cert', 'proxies']
 
 
 def test_return_an_empty_list_when_just_an_ignored_parameter_is_found_on_parameter_list(os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(self):')
     with mock.patch('builtins.open', file_mock, create=True):
-        code_files = extractor.code_files()
+        methods_list = extractor.all_methods()
 
-    assert [] == code_files[0].method_list[0].parameters_list
+    assert methods_list[0].parameters_list == []
