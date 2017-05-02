@@ -2,3 +2,4 @@
 - Group the parameters guided by frequency they appear together
 - Detect the language by the file extension
 - Generate HTML report
+- Add looong progress bar
