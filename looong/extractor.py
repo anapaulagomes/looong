@@ -12,7 +12,7 @@ class Extractor(object):
         full_directory = self.directory
         methods_list = []
 
-        for dirpath, dirnames, filenames in os.walk(full_directory):
+        for dirpath, _, filenames in os.walk(full_directory):
             for filename in filenames:
                 filename_with_path = dirpath + '/' + filename
                 methods_list = methods_list + self.__methods(filename_with_path)
