@@ -1,6 +1,3 @@
-from operator import attrgetter
-
-
 class Analyzer(object):
     LONG_PARAMETER_THRESHOULD = 3
 
