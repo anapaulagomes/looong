@@ -1,5 +1,5 @@
-from extractor import Extractor
-from analyzer import Analyzer
+from looong.extractor import Extractor
+from looong.analyzer import Analyzer
 import os
 import argparse
 
@@ -29,8 +29,12 @@ def analyze(all_methods):
     analyzer.execute()
 
 
-if __name__ == '__main__':
+def execute():
     options = capture_options()
     directory = options.directory
     code_files = extract_all_methods(directory)
     analyze(code_files)
+
+
+if __name__ == '__main__':
+    execute()
