@@ -1,14 +1,15 @@
 from extractor import Extractor
 from analyzer import Analyzer
 import os
-from optparse import OptionParser
+import argparse
 
 
 def capture_options():
-    parser = OptionParser()
-    parser.add_option("-d", "--directory", dest="directory", default=os.getcwd(), help="the project directory to analyze")
-    (options, args) = parser.parse_args()
-    return options
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--directory", dest="directory", default=os.getcwd(), help="the project directory to analyze")
+
+    args = parser.parse_args()
+    return args
 
 
 def extract_all_methods(directory):
@@ -23,7 +24,7 @@ def extract_all_methods(directory):
 def analyze(all_methods):
     method_list = [method for method in all_methods]
     print('Analyzed methods: {}\n'.format(len(method_list)))
-    
+
     analyzer = Analyzer(method_list)
     analyzer.execute()
 
