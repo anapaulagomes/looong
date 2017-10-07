@@ -6,7 +6,12 @@ import argparse
 
 def capture_options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--directory", dest="directory", default=os.getcwd(), help="the project directory to analyze")
+    parser.add_argument(
+        "-d",
+        "--directory",
+        dest="directory",
+        default=os.getcwd(),
+        help="the project directory to analyze")
 
     args = parser.parse_args()
     return args
