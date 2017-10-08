@@ -1,6 +1,6 @@
 # How to contribute?
 
-Welcome! 🎉 You can see or open issues [here](https://github.com/anapaulagomes/looong/issues).
+Welcome! 🎉 You can see the things [to do](TODO.md) or the open issues [here](https://github.com/anapaulagomes/looong/issues).
 
 ## Steps
 

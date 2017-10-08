@@ -1,4 +1,6 @@
 - Group the parameters guided by frequency they appear together
-- Detect the language by the file extension
+- Detect the language by the file extension (+ argument --lang on command line)
 - Generate HTML report
 - Add looong progress bar
+- Skip tests folder and tests files (test_*) + .pyc + hidden folders and files
+- Run the discovery asynchronous
