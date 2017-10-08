@@ -19,7 +19,8 @@ requests = "==2.13.0"
 tox = "==2.7.0"
 "tox-pyenv" = "==1.0.3"
 virtualenv = "==15.1.0"
-yapf = "*"
-
 
 [dev-packages]
+
+jupyter = "*"
+yapf = "*"
