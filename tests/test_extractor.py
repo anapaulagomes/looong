@@ -1,24 +1,9 @@
-from looong.extractor import Extractor
-from looong.method import Method
 import os
-import pytest
 import mock
-from mock import mock_open
 
 
-@pytest.fixture()
-def os_mock(mocker):
-    directory = '/tests/fixtures'
-    mocker.patch('os.getcwd', return_value='/home/bla')
-    yield mocker.patch('os.walk', return_value=[(directory, [], ['foo.py'])])
-
-
-@pytest.fixture()
-def extractor():
-    yield Extractor(os.getcwd() + '/tests/fixtures')
-
-
-def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(os_mock, extractor):
+def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(
+        os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(bar):')
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
@@ -28,7 +13,8 @@ def test_should_return_method_with_one_parameter_when_extract_from_method_with_o
     assert methods == ['bar']
 
 
-def test_should_extract_multiple_parameters_on_method_parameter_list(os_mock, extractor):
+def test_should_extract_multiple_parameters_on_method_parameter_list(
+        os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(bar, other_bar):')
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
@@ -36,7 +22,8 @@ def test_should_extract_multiple_parameters_on_method_parameter_list(os_mock, ex
     assert methods_list[0].parameters_list == ['bar', 'other_bar']
 
 
-def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(os_mock, extractor):
+def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(
+        os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo():')
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
@@ -57,7 +44,8 @@ def test_should_return_parameters_list_extracted_from_a_file(extractor):
 def test_should_return_filename_and_directory_from_code_file(extractor):
     methods_list = extractor.all_methods()
 
-    assert methods_list[0].filename == os.getcwd() + '/tests/fixtures/my_python_test_file.py'
+    assert methods_list[
+        0].filename == os.getcwd() + '/tests/fixtures/my_python_test_file.py'
 
 
 def test_ignore_self_from_parameter_list(os_mock, extractor):
@@ -77,14 +65,20 @@ def test_ignore_cls_from_parameter_list(os_mock, extractor):
 
 
 def test_ignore_default_values_of_parameters(os_mock, extractor):
-    file_mock = mock.mock_open(read_data='def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):')
+    file_mock = mock.mock_open(
+        read_data=
+        'def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):'
+    )
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
 
-    assert methods_list[0].parameters_list == ['request', 'stream', 'timeout', 'verify', 'cert', 'proxies']
+    assert methods_list[0].parameters_list == [
+        'request', 'stream', 'timeout', 'verify', 'cert', 'proxies'
+    ]
 
 
-def test_return_an_empty_list_when_just_an_ignored_parameter_is_found_on_parameter_list(os_mock, extractor):
+def test_return_an_empty_list_when_just_an_ignored_parameter_is_found_on_parameter_list(
+        os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(self):')
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
