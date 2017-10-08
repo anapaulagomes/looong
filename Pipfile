@@ -23,3 +23,5 @@ yapf = "*"
 
 
 [dev-packages]
+yapf = "*"
+jupyter = "*"
