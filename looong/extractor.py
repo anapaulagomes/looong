@@ -3,20 +3,50 @@ import re
 import os
 
 
+EXCLUDED_DIRS = [
+    'tests',
+    'node_modules',
+    'bower_components',
+]
+
+EXCLUDED_FILES = [
+    'conftest.py'
+]
+
+
 class Extractor(object):
     def __init__(self, directory):
         self.directory = directory
+        EXCLUDED_DIRS.append(os.environ.get('VIRTUAL_ENV', None))
 
     def all_methods(self):
-        full_directory = self.directory
         methods_list = []
 
-        for dirpath, _, filenames in os.walk(full_directory):
-            for filename in filenames:
-                filename_with_path = dirpath + '/' + filename
+        for current_folder, dirs, files in os.walk(self.directory, topdown=True):
+            if self._is_virtual_env(current_folder):
+                dirs[:] = []
+                continue
+
+            dirs[:] = self._allowed_dirs(dirs)
+            files[:] = self._allowed_files(files)
+
+            for filename in files:
+                filename_with_path = current_folder + '/' + filename
                 methods_list = methods_list + self._methods(filename_with_path)
 
         return methods_list
+
+    def _allowed_dirs(self, dirs):
+        return [directory for directory in dirs
+                if directory not in EXCLUDED_DIRS and
+                not directory.startswith('.') and
+                not directory.startswith('_')]
+
+    def _allowed_files(self, files):
+        return [dfile
+                for dfile in files
+                if dfile not in EXCLUDED_FILES and
+                dfile.lower().endswith('.py')]
 
     def _methods(self, filename):
         method_list = []
@@ -28,7 +58,7 @@ class Extractor(object):
         for name, parameters in raw_parameters_list:
             parameters_list = self._clean_parameters(parameters)
 
-            if parameters_list != []:
+            if parameters_list:
                 method = Method(name, filename.name, [] if
                                 parameters_list[0] == '' else parameters_list)
             else:
@@ -59,3 +89,9 @@ class Extractor(object):
             if parameter.find('=') != -1 else parameter
             for parameter in parameters_list
         ]
+
+    def _is_virtual_env(self, current_folder):
+        python = os.path.exists(current_folder + '/bin/python')
+        activate = os.path.exists(current_folder + '/bin/activate')
+
+        return python or activate

@@ -22,9 +22,10 @@ clean-pyc:
 
 install:
 	@pip install -r requirements.txt
+	python setup.py install
 
 lint:
-	flake8 tests
+	flake8
 
 test:
 	pytest tests
