@@ -1,7 +1,9 @@
-import pytest
-from looong.method import Method
-from looong.extractor import Extractor
 import os
+
+import pytest
+
+from looong.extractor import Extractor
+from looong.method import Method
 
 
 @pytest.fixture
