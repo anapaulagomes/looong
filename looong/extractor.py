@@ -1,7 +1,7 @@
-from looong.method import Method
-import re
 import os
+import re
 
+from looong.method import Method
 
 EXCLUDED_DIRS = [
     'tests',
@@ -22,7 +22,7 @@ class Extractor(object):
     def all_methods(self):
         methods_list = []
 
-        for current_folder, dirs, files in os.walk(self.directory, topdown=True):
+        for current_folder, dirs, files in os.walk(self.directory):
             if self._is_virtual_env(current_folder):
                 dirs[:] = []
                 continue

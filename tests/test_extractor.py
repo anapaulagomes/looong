@@ -77,10 +77,46 @@ def test_ignore_default_values_of_parameters(os_mock, extractor):
     ]
 
 
-def test_return_an_empty_list_when_just_an_ignored_parameter_is_found_on_parameter_list(
+def test_return_an_empty_list_when_find_ignored_parameter_is_found(
         os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(self):')
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
 
     assert methods_list[0].parameters_list == []
+
+
+def test_should_skip_excluded_folders(mocker):
+    extractor = Extractor('/bla')
+
+    mocker.patch('os.path.exists', return_value=True)
+    mocker.patch('os.walk', return_value=[
+            ('/bla/foo', ['venv', '.git', '__pycache__'], ()),
+            ('/bla/foo/venv', ['bin', 'activate'], ('a.py', 'b.py')),
+            ('/bla/foo/venv/bin', [], ('python', 'activate')),
+            ('/bla/foo/.git', [], ('python', 'activate')),
+            ('/bla/foo/node_modules', [], ('a.py', 'b.py')),
+        ])
+
+    methods_list = extractor.all_methods()
+
+    assert methods_list == []
+
+
+def test_should_skip_excluded_files(mocker):
+    extractor = Extractor('/home/bla')
+
+    mocker.patch('os.walk', return_value=[
+            ('/home/bla/foo', [], []),
+            ('/home/bla/foo/bar', ['x', 'z'], ['a.py', 'b.jar']),
+            ('/home/bla/foo/x', [], ['python.pyc', 'noextension']),
+            ('/home/bla/foo/z', [], ['python', 'activate']),
+            ('/home/bla/foo/module', [], ['a.rb', 'b.py']),
+        ])
+
+    read_data = 'def foo(self, one, two, three, four):'
+    file_mock = mock.mock_open(read_data=read_data)
+    with mock.patch('builtins.open', file_mock, create=True):
+        methods_list = extractor.all_methods()
+
+    assert len(methods_list) == 2
