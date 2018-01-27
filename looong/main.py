@@ -1,10 +1,8 @@
-import sys
-import os
-sys.path.append(os.getcwd())
-
-from looong.extractor import Extractor
-from looong.analyzer import Analyzer
 import argparse
+import os
+
+from looong.analyzer import Analyzer
+from looong.extractor import Extractor
 
 
 def capture_options():

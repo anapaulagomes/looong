@@ -1,8 +1,10 @@
 import os
-import mock
+from unittest import mock
+
+from looong.extractor import Extractor
 
 
-def test_should_return_method_with_one_parameter_when_extract_from_method_with_one_parameter(
+def test_return_method_with_one_parameter_when_method_has_one_parameter(
         os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo(bar):')
     with mock.patch('builtins.open', file_mock, create=True):
@@ -22,7 +24,7 @@ def test_should_extract_multiple_parameters_on_method_parameter_list(
     assert methods_list[0].parameters_list == ['bar', 'other_bar']
 
 
-def test_should_return_a_method_with_an_empty_list_when_there_is_no_parameters_on_method_parameter_list(
+def test_should_return_method_with_an_empty_list_when_there_is_no_parameters(
         os_mock, extractor):
     file_mock = mock.mock_open(read_data='def foo():')
     with mock.patch('builtins.open', file_mock, create=True):
@@ -66,8 +68,8 @@ def test_ignore_cls_from_parameter_list(os_mock, extractor):
 
 def test_ignore_default_values_of_parameters(os_mock, extractor):
     file_mock = mock.mock_open(
-        read_data=
-        'def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):'
+        read_data='def send(self, request, stream=False, '
+                  'timeout=None, verify=True, cert=None, proxies=None):'
     )
     with mock.patch('builtins.open', file_mock, create=True):
         methods_list = extractor.all_methods()
